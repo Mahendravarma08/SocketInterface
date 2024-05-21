@@ -1,0 +1,55 @@
+<div class="login-container">
+    <div class="login-card" *ngIf="!showSignUp">
+      <h2 class="lets-chat">Lets Chat</h2>
+
+      <form [formGroup]='loginForm'>
+        <div>
+          <div class="input-group">
+            <input type="text" id="username" formControlName="username" name="username" required>
+            <label for="username">Username</label>
+          </div>
+          
+          <div class="input-group">
+            <input type="password" id="password" formControlName="password" name="password" required>
+            <label for="password">Password</label>
+          </div>
+          <div class="error-message" *ngIf="error.error">
+              {{error.message}}
+          </div>
+        </div>
+        <button type="submit" (click)="login()">Login</button>
+      </form>
+      <p>Don't have an account? <a href="#" (click)="toggleForm()">Sign Up</a></p>
+    </div>
+  
+    <div class="signup-card" *ngIf="showSignUp">
+      <h2>Sign Up</h2>
+      <form [formGroup]='signupForm'>
+        <div class="input-group">
+          <input type="text" id="fullname" formControlName="username" name="fullname" required>
+          <label for="fullname">Username</label>
+        </div>
+        
+        <div class="input-group">
+          <input type="email" id="email" formControlName="email" name="email" required>
+          <label for="email">Email</label>
+        </div>
+  
+        <div class="input-group">
+          <input type="password" id="signup-password" formControlName="password" name="signup-password" required>
+          <label for="signup-password">Password</label>
+        </div>
+        
+        <button type="submit" (click)="signUp()">Sign Up</button>
+      </form>
+      <p>Already have an account? <a href="#" (click)="toggleForm()">Login</a></p>
+    </div>
+</div>
+
+
+
+
+
+
+
+  
