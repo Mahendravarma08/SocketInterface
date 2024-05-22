@@ -16,18 +16,17 @@
         </div>
         <div class="timer">12 sec</div>
       </div> -->
-      @if(users.length){
-      <div class="discussion message-active" *ngFor="let user of users" (click)="selectUser(user)">
+      <div class="discussion message-active" *ngFor="let user of users" (click)="selectUser(user.userName)">
         <div class="photo" style="background-image: url(https://i.pinimg.com/originals/a9/26/52/a926525d966c9479c18d3b4f8e64b434.jpg);">
           <div class="online"></div>
         </div>
         <div class="desc-contact">
           <a class="name">{{user?.userName ? user?.userName : '&mdash;'}}</a>
+          <!-- <a class="name">{{user}}</a> -->
           <p class="message">Let's meet for a coffee or something today ?</p>
         </div>
         <div class="timer">3 min</div>
       </div>
-    }
 
       <!-- <div class="discussion">
         <div class="photo" style="background-image: url(https://images.unsplash.com/photo-1497551060073-4c5ab6435f12?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=667&q=80);">
@@ -86,7 +85,7 @@
       <!-- <section class="chat"> -->
         <div class="header-chat">
           <i class="icon fa fa-user-o" aria-hidden="true"></i>
-          <p class="name">{{ selectedUser.name }}</p>
+          <p class="name">{{ selectedUser.userName }}</p>
           <i class="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
         </div>
         <div class="messages-chat">
@@ -121,8 +120,8 @@
         </div>
         <div class="footer-chat">
           <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
-          <input type="text" class="write-message" placeholder="Type your message here">
-          <i class="icon send fa fa-paper-plane-o clickable" aria-hidden="true"></i>
+          <input type="text" class="write-message" [(ngModel)]="newMessage" placeholder="Type your message here">
+          <i class="icon send fa fa-paper-plane-o clickable" (click)="sendMessage()" aria-hidden="true"></i>
         </div>
       <!-- </section> -->
     </div>

@@ -36,7 +36,7 @@ import { Route, Router, RouterModule } from '@angular/router';
     ngOnInit(): void {
       console.log(environment.apiUrl);
       this.initializeForms()
-      this.socketService.connect()
+      // this.socketService.connect()
     }
 
     toggleForm() {

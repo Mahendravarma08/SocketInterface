@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpService } from '../services/http.service';
 import { ActivatedRoute } from '@angular/router';
 import { usersList } from '../interfaces';
+import { SocketService } from '../services/socket.service';
 
 @Component({
   selector: 'app-chatwindow',
@@ -14,14 +15,14 @@ import { usersList } from '../interfaces';
 })
 export class ChatwindowComponent implements OnInit{
 
-  users = [];
-  selectedUser:usersList[] = [];
+  users:usersList[] = [];
+  selectedUser:usersList | null = null;
   messages:any = [];
   newMessage = '';
   currentUser : string = ''
 
 
-  constructor(private httpService:HttpService,private route:ActivatedRoute){}
+  constructor(private httpService:HttpService,private route:ActivatedRoute,private socketService:SocketService){}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params =>{
@@ -35,6 +36,8 @@ export class ChatwindowComponent implements OnInit{
 
   selectUser(user: any) {
     this.selectedUser = user;
+    console.log(this.selectedUser);
+  
     // Fetch messages for the selected user
     this.messages = [
       { text: 'Hello!', isResponse: false },
@@ -44,12 +47,15 @@ export class ChatwindowComponent implements OnInit{
 
   sendMessage() {
     if (this.newMessage.trim()) {
-      this.messages.push({ text: this.newMessage, isResponse: false });
-      this.newMessage = '';
-      // Simulate a response
-      setTimeout(() => {
-        this.messages.push({ text: 'Response from user', isResponse: true });
-      }, 1000);
+      console.log(this.newMessage);
+      
+      // this.messages.push({ text: this.newMessage, isResponse: false });
+      // this.newMessage = '';
+      // // Simulate a response
+      // setTimeout(() => {
+      //   this.messages.push({ text: 'Response from user', isResponse: true });
+      // }, 1000);
+      this.socketService.sendMesssage({message:this.newMessage,userId:this.selectedUser})
     }
   }
 
@@ -58,7 +64,8 @@ export class ChatwindowComponent implements OnInit{
       next: (response) =>{
         console.log(response)
         if(response && response.ok){
-          this.users = response.users as usersList[]
+          // this.users = response.users as usersList[]       
+          this.users = response.users      
           console.log(this.users);
           
         }

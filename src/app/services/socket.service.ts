@@ -9,10 +9,21 @@ export class SocketService {
 
   socket:Socket | undefined
 
-  constructor() { }
+  constructor() { this.connect()}
 
 
   connect(){
-    this.socket = io(environment.apiUrl)
+    if(!this.socket){
+      this.socket = io(environment.apiUrl)
+    }
+    console.log(this.socket)
+  }
+
+  sendMesssage(message:any){
+    console.log(message);
+    console.log(this.socket);
+    
+    
+    this.socket?.emit('message',message)
   }
 }
