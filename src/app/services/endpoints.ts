@@ -4,4 +4,6 @@ export const API = {
     LOGIN : `${environment.apiUrl}/login`,
     SIGNUP: `${environment.apiUrl}/signup`,
     GET_USERS : `${environment.apiUrl}/getUsers`,
+    GET_MESSAGES : `${environment.apiUrl}/messages`,
+    
 }

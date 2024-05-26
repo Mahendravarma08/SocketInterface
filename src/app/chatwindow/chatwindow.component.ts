@@ -20,24 +20,62 @@ export class ChatwindowComponent implements OnInit{
   messages:any = [];
   newMessage = '';
   currentUser : string = ''
+  socketId:any= null
 
 
-  constructor(private httpService:HttpService,private route:ActivatedRoute,private socketService:SocketService){}
+  constructor(private httpService:HttpService,private route:ActivatedRoute,private socketService:SocketService){
+  }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params =>{
       console.log(params,"params");
       this.currentUser = params['userName']
+      if(!this.socketService.socket){
+        this.socketService.connect(this.currentUser)
+        this.socketId = this.socketService.socket
+      }
+
+      console.log(this.messages);
+      
+
+      console.log(this.socketId);
+      
+
+      
+      console.log(this.socketService.socket);
+      
+      
       console.log(this.currentUser);
+
+      // Subscribe to incoming messages
+      this.socketService.onMessage(message => {
+        console.log('Received message:', message);
+        // Update your messages array here based on the received message
+      });
       
     })
     this.getUsers(this.currentUser)
   }
 
-  selectUser(user: any) {
+  selectUser(user: usersList) {
     this.selectedUser = user;
     console.log(this.selectedUser);
-  
+    const userName= this.selectedUser?.userName
+
+    const body = {
+      currentUser: this.currentUser,
+      selectedUser : this.selectedUser.userName
+    }
+    this.httpService.getMessages(body).subscribe({
+      next: (response) =>{
+        console.log(response,"response_from_getMesages")
+        if(response && response.ok){
+          // this.messages = 
+          
+          
+        }
+      }
+    })
     // Fetch messages for the selected user
     this.messages = [
       { text: 'Hello!', isResponse: false },
@@ -48,14 +86,13 @@ export class ChatwindowComponent implements OnInit{
   sendMessage() {
     if (this.newMessage.trim()) {
       console.log(this.newMessage);
-      
-      // this.messages.push({ text: this.newMessage, isResponse: false });
-      // this.newMessage = '';
-      // // Simulate a response
-      // setTimeout(() => {
-      //   this.messages.push({ text: 'Response from user', isResponse: true });
-      // }, 1000);
-      this.socketService.sendMesssage({message:this.newMessage,userId:this.selectedUser})
+      const body ={
+        sender: this.currentUser,
+        recipient: this.selectedUser?.userName,
+        message: this.newMessage,
+        socketId: this.selectedUser?.socketId
+      }
+      this.socketService.sendMessage(body)
     }
   }
 
@@ -72,4 +109,5 @@ export class ChatwindowComponent implements OnInit{
       }
     })
   }
+
 }

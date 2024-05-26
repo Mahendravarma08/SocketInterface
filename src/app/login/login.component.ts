@@ -78,9 +78,10 @@ import { Route, Router, RouterModule } from '@angular/router';
       .subscribe({
         next: (response) => {
           console.log(response,"Respons_from_login_API");
-          
           if(response && response.ok){
-            this.router.navigate(['chatwindow'],{queryParams:{userName:response.user[0].userName}})
+            const loginDetails = response.user[0]
+            this.socketService.connect(loginDetails.userName)
+            this.router.navigate(['chatwindow'],{queryParams:{userName:loginDetails.userName}})
             this.error.error = false
           }
           console.log(response,"response form login API")
@@ -107,7 +108,10 @@ import { Route, Router, RouterModule } from '@angular/router';
       this.httpService.signUp(body).subscribe((response)=>{
         console.log(response,"response form login API")
         if(response.ok){
-          this.router.navigate(['chatwindow'])
+          const loginDetails = response.user
+          console.log(loginDetails,"sgkjrskgbsrhbhjgjh");
+          
+          this.router.navigate(['chatwindow'],{queryParams:{userName:loginDetails.userName}})
         }
       })
     }
