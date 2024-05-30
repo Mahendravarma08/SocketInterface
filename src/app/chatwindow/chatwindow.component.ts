@@ -50,6 +50,7 @@ export class ChatwindowComponent implements OnInit{
       // Subscribe to incoming messages
       this.socketService.onMessage(message => {
         console.log('Received message:', message);
+        this.messages.push(message)
         // Update your messages array here based on the received message
       });
       
@@ -66,6 +67,9 @@ export class ChatwindowComponent implements OnInit{
       currentUser: this.currentUser,
       selectedUser : this.selectedUser.userName
     }
+
+    console.log(body);
+    
     this.httpService.getMessages(body).subscribe({
       next: (response) =>{
         console.log(response,"response_from_getMesages")
