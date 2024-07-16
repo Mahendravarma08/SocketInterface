@@ -1,3 +1,6 @@
+// Import Bootstrap's SCSS
+@import "../node_modules/bootstrap/scss/bootstrap";
+// CSS for logout button starts
 .layout {
   position: fixed;
   top: 0;
@@ -14,6 +17,8 @@
   top: 10px;
   right: 10px;
 }
+
+// CSS for logout button ends
 
 .login-container {
   position: absolute;
@@ -107,147 +112,17 @@ a:hover {
 }
 
 
-// chatcss
-// -----------------------------------
-// .chat-container {
-//   display: flex;
-//   height: 100vh;
-//   background-color: #F5F5F5;
-// }
-
-
-// .discussions {
-//   width: 100%;
-//   overflow-y: auto;
-//   transition: width 0.3s;
-//   // background-color: #87a3ec;
-//   background-color: #87a3ec;
-//   box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.2);
-//   display: inline-block;
-// }
-
-// .discussions.expanded {
-//   width: 30%;
-// }
-
-// .chat {
-//   display: flex;
-//   flex-direction: column;
-//   width: 0;
-//   overflow: hidden;
-//   transition: width 0.3s;
-// }
-
-// .desc-contact {
-//   // height: 43px;
-//   width:50%;
-//   white-space: nowrap;
-//   overflow: hidden;
-//   text-overflow: ellipsis;
-// }
-
-// .discussions.expanded + .chat {
-//   width: 70%;
-// }
-
-// .chat-history {
-//   flex: 1;
-//   overflow-y: auto;
-//   padding: 25px 35px;
-//   border-bottom: 1px solid #ccc;
-// }
-
-// .message-input {
-//   display: flex;
-//   align-items: center;
-//   padding: 10px;
-//   background-color: #f6f6f6;
-// }
-
-// .message-input input {
-//   flex: 1;
-//   padding: 10px;
-//   border: 1px solid #ccc;
-//   border-radius: 4px;
-// }
-
-// .message-input button {
-//   padding: 10px 20px;
-//   background-color: #007bff;
-//   color: #fff;
-//   border: none;
-//   border-radius: 4px;
-//   cursor: pointer;
-//   transition: background-color 0.3s;
-// }
-
-// .message-input button:hover {
-//   background-color: #0056b3;
-// }
-
-// .header-chat {
-//   background-color: #fff;
-//   height: 90px;
-//   box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.1);
-//   display: flex;
-//   align-items: center;
-//   padding: 0 20px;
-// }
-
-// .header-chat .icon {
-//   margin-right: 20px;
-//   color: #515151;
-//   font-size: 14pt;
-// }
-
-// .header-chat .name {
-//   text-transform: uppercase;
-//   font-family: 'Montserrat', sans-serif;
-//   font-size: 13pt;
-//   color: #515151;
-// }
-
-// .header-chat .right {
-//   margin-left: auto;
-//   color: #515151;
-// }
-
-// .message {
-//   display: flex;
-//   align-items: center;
-//   margin-bottom: 8px;
-// }
-
-// .message .text {
-//   margin-left: 20px;
-//   padding: 15px;
-//   background-color: #f6f6f6;
-//   border-radius: 12px;
-// }
-
-// .message.response .text {
-//   background-color: #e3effd !important;
-// }
-
+// chat container css starts here.
 .chat-container {
   display: flex;
   height: 100vh;
   background-color: #F5F5F5;
 }
 
-
-// .discussions {
-//   height: 700px;
-//   overflow-y: auto;  /* Enable scroll for long user lists */
-//   box-shadow: 0px 8px 10px rgba(0,0,0,0.20);
-// }
-
 .discussions {
   width: 100%;
   overflow-y: auto;
   transition: width 0.3s;
-  // background-color: #87a3ec;
-  // background-color: #87a3ec;
   box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.2);
   display: inline-block;
 }
@@ -262,7 +137,8 @@ a:hover {
 
 .discussions .discussion {
   width: 100%;
-  height: 90px;
+  // padding-top: 1rem;
+  // padding-bottom: 1rem;
   background-color: #FAFAFA;
   border-bottom: solid 1px #E0E0E0;
   display:flex;
@@ -270,12 +146,20 @@ a:hover {
   cursor: pointer;
 }
 
+// .discussions .search {
+//   display:flex;
+//   align-items: center;
+//   justify-content: center;
+//   color: #E0E0E0;
+// }
 .discussions .search {
-  display:flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  color: #E0E0E0;
+  background-color: transparent; /* Make background transparent */
+  color: transparent; /* Make text transparent */
 }
+
 
 .discussions .search .searchbar {
   height: 40px;
@@ -380,27 +264,52 @@ a:hover {
 .chat {
   display: flex;
   flex-direction: column;  /* Stack chat history and input */
-  padding: 10px;
+  // padding: 10px;
   background-color: #fff;
   overflow: hidden;
   transition: width 0.3s;
 }
 
-// .header-chat {
-//   background-color: #FFF;
-//   height: 90px;
-//   box-shadow: 0px 3px 2px rgba(0,0,0,0.100);
-//   display:flex;
-//   align-items: center;
-// }
+.messages-wrapper {
+  // flex: 1;
+  overflow-y: scroll;
+  padding: 25px 35px;
+  margin-bottom: 100px; /* Space for footer */
+}
 
-.header-chat {
-  background-color: #fff;
-  height: 90px;
-  box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.1);
+
+// .header-chat {
+//   height: 40px;
+//   background-color: #FFF;
+//   // width: 70%;
+//   border: 1px solid #EEEEEE;
+//   padding: 0 20px;
+//   // box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.1);
+//   display: flex;
+//   align-items: center;
+//   // max-height: fit-content;
+// }
+.chat-header {
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  padding: 10px;
+  background-color: #FFF;
+  border: 1px solid #EEEEEE;
+  border-bottom: 1px solid #ddd;
+}
+.profile-photo {
+  width: 40px;
+  height: 5px;
+  border-radius: 30%;
+  margin-right: 30px;
+}
+
+.user-name {
+  margin: 0 0 0 20px;
+  text-transform: uppercase;
+  font-family:'Montserrat', sans-serif;
+  font-size: 13pt;
+  color:#515151;
 }
 
 .message-input {
@@ -438,6 +347,12 @@ a:hover {
 
 .chat .messages-chat {
   padding: 25px 35px;
+  // overflow-y: scroll;
+}
+.message-container {
+  /* ... */
+  padding: 25px 35px;
+  overflow-y: scroll; /* Enable vertical scroll */
 }
 
 .chat .messages-chat .message {
@@ -492,15 +407,15 @@ a:hover {
 }
 
 .footer-chat {
-  width: calc(65% - 66px);
+  width: calc(65% - 30px);
   height: 80px;
   display:flex;
   align-items: center;
   position:absolute;
   bottom: 0;
-  background-color: transparent;
-  border-top: 2px solid #EEE;
-  
+  // background-color: transparent;
+  border-top: 2px solid #2c2828;
+  // bottom: 0;
 }
 
 .chat .footer-chat .icon {
@@ -576,7 +491,57 @@ a:hover {
   display: block;
 }
 
+.chat-menu {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.menu-btn:hover {
+  cursor: pointer;
+}
+  
+
+  .chat-menu .menu-btn.active {
+    border-bottom:  solid #007bff; /* Underline color */
+    // padding-top: 1rem ;
+  }
 
 
+  .profile-photo-wrapper {
+    position: relative;
+    display: inline-block;
+  }
 
+  .profile-photo {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+  }
 
+  .photo-options {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .photo-options button {
+    margin-bottom: 5px;
+  }
+
+  .clear-icon {
+    cursor: pointer;
+    opacity: 0.5; /* Adjust opacity as needed */
+    transition: opacity 0.3s ease;
+  }
+
+  .clear-icon:hover {
+    opacity: 1;
+  }

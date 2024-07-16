@@ -26,6 +26,12 @@ export class HttpService {
   getUsers(userName:Object){
     return this.http.post<any>(API.GET_USERS,userName,this.httpOptions); 
   }
+  getGroups(userName:Object){
+    return this.http.post<any>(API.GET_GROUPS,userName,this.httpOptions); 
+  }
+  createGroup(body:Object){
+    return this.http.post<any>(API.CREATE_GROUP,body,this.httpOptions); 
+  }
 
   getMessages(body:selectedUser){
     return this.http.get<any>(`${API.GET_MESSAGES}/${body.currentUser}/${body.selectedUser}`,this.httpOptions); 

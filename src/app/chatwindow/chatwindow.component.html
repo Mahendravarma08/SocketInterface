@@ -6,126 +6,147 @@
           <input type="text" placeholder="Search...">
         <!-- </div> -->
       </div>
-      <!-- <div class="discussion message-active">
-        <div class="photo" style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
-          <div class="online"></div>
-        </div>
-        <div class="desc-contact">
-          <p class="name">Megan Leib</p>
-          <p class="message">9 pm at the bar if possible 😳</p>
-        </div>
-        <div class="timer">12 sec</div>
-      </div> -->
-      <div class="discussion message-active" *ngFor="let user of users" (click)="selectUser(user)">
-        <div class="photo" style="background-image: url(https://i.pinimg.com/originals/a9/26/52/a926525d966c9479c18d3b4f8e64b434.jpg);">
-          <div class="online"></div>
-        </div>
-        <div class="desc-contact">
-          <a class="name">{{user?.userName ? user?.userName : '&mdash;'}}</a>
-          <!-- <a class="name">{{user}}</a> -->
-          <p class="message">Let's meet for a coffee or something today ?</p>
-        </div>
-        <div class="timer">3 min</div>
+      <div class="chat-menu d-flex flex-row justify-content-between">
+        <a class="menu-btn flex-fill {{ activeTab === 'individual' ? 'active' : '' }}" (click)="changechatmenu('individual')"><i class="fa fa-hand-o-up"></i>Individual</a>
+        <a class="menu-btn flex-fill {{ activeTab === 'group' ? 'active' : '' }}" (click)="changechatmenu('group')"><i class="fa fa-hand-o-up"></i>Groups</a>
       </div>
 
-      <!-- <div class="discussion">
-        <div class="photo" style="background-image: url(https://images.unsplash.com/photo-1497551060073-4c5ab6435f12?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=667&q=80);">
-        </div>
-        <div class="desc-contact">
-          <p class="name">Jerome Seiber</p>
-          <p class="message">I've sent you the annual report</p>
-        </div>
-        <div class="timer">42 min</div>
-      </div> -->
 
-      <!-- <div class="discussion">
-        <div class="photo" style="background-image: url(https://card.thomasdaubenton.com/img/photo.jpg);">
-          <div class="online"></div>
+      <div *ngIf="activeTab === 'individual'">
+        <div class="discussion message-active" *ngFor="let user of users" (click)="selectUser(user)">
+          <div class="photo" style="background-image: url(https://i.pinimg.com/originals/a9/26/52/a926525d966c9479c18d3b4f8e64b434.jpg);">
+            <div class="online"></div>
+          </div>
+          <div class="desc-contact">
+            <a class="name">{{user?.userName ? user?.userName : '&mdash;'}}</a>
+            <!-- <a class="name">{{user}}</a> -->
+            <p class="message">Let's meet for a coffee or something today ?</p>
+          </div>
+          <div class="timer">3 min</div>
         </div>
-        <div class="desc-contact">
-          <p class="name">Thomas Dbtn</p>
-          <p class="message">See you tomorrow ! 🙂</p>
-        </div>
-        <div class="timer">2 hour</div>
       </div>
 
-      <div class="discussion">
-        <div class="photo" style="background-image: url(https://images.unsplash.com/photo-1553514029-1318c9127859?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=700&q=80);">
-        </div>
-        <div class="desc-contact">
-          <p class="name">Elsie Amador</p>
-          <p class="message">What the f**k is going on ?</p>
-        </div>
-        <div class="timer">1 day</div>
-      </div>
+      <div *ngIf="activeTab === 'group'">
+        <!-- <button (click)="openModal()">Create group</button> -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" (click)="resetGroupDetails()">Create Group</button>
 
-      <div class="discussion">
-        <div class="photo" style="background-image: url(https://images.unsplash.com/photo-1541747157478-3222166cf342?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=967&q=80);">
+        <div class="discussion message-active" *ngFor="let group of groups" (click)="selectGroup(group.groupTitle)">
+          <div class="photo" style="background-image: url(https://i.pinimg.com/originals/a9/26/52/a926525d966c9479c18d3b4f8e64b434.jpg);">
+            <div class="online"></div>
+          </div>
+          <div class="desc-contact">
+            <a class="name">{{group?.groupTitle ? group?.groupTitle : '&mdash;'}}</a>
+            <p class="message">Let's meet for a coffee or something today ?</p>
+          </div>
+          <div class="timer">3 min</div>
         </div>
-        <div class="desc-contact">
-          <p class="name">Billy Southard</p>
-          <p class="message">Ahahah 😂</p>
-        </div>
-        <div class="timer">4 days</div>
       </div>
-
-      <div class="discussion">
-        <div class="photo" style="background-image: url(https://images.unsplash.com/photo-1435348773030-a1d74f568bc2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1050&q=80);">
-          <div class="online"></div>
-        </div>
-        <div class="desc-contact">
-          <p class="name">Paul Walker</p>
-          <p class="message">You can't see me</p>
-        </div>
-        <div class="timer">1 week</div>
-      </div> -->
   </section>
 
-  <div *ngIf="selectedUser" class="chat">
-      <!-- <section class="chat"> -->
-        <div class="header-chat">
-          <i class="icon fa fa-user-o" aria-hidden="true"></i>
-          <p class="name">{{ selectedUser.userName }}</p>
-          <i class="icon clickable fa fa-ellipsis-h right" aria-hidden="true"></i>
-        </div>
+<div *ngIf="(activeTab==='individual' && selectedUser) || (activeTab === 'group' && selectedGroup)" class="chat"> 
+    <div *ngIf="activeTab === 'individual'">
+      <div class="chat-header">
+        <span class="user-name">{{ selectedUser.userName }}</span>
+      </div>
+      <div class="messages-wrapper" #scroll>
         <div class="messages-chat" *ngFor="let message of messages">
+          <div class="message" *ngIf="message.sender != currentUser">
+            <div class="photo" style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
+              <div class="online"></div>
+            </div>
+            <p class="text">
+              {{message.message}}
+            </p>
+          </div>
+          <div class="message text-only" *ngIf="message.sender == currentUser">
+            <div class="response">
+              <p class="text"> {{message.message}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="activeTab === 'group'">
+      <div class="chat-header">
+        <span class="user-name">Partha</span>
+      </div>
+      <div class="messages-wrapper" #scroll>
+        <div class="messages-chat">
           <div class="message">
             <div class="photo" style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
               <div class="online"></div>
             </div>
             <p class="text">
-              <!-- TODO -->
-              iiiiiiiiiiiiii
+              Hellooo
             </p>
           </div>
-          <!-- <div class="message text-only">
-            <p class="text"> What are you doing tonight ? Want to go take a drink ?</p>
-          </div>
-          <p class="time"> 14h58</p> -->
           <div class="message text-only">
             <div class="response">
-              <p class="text"> Hey Megan ! It's been a while 😃</p>
+              <p class="text"> Hiiii</p>
             </div>
           </div>
-          <div class="message text-only">
-            <div class="response">
-              <p class="text"> When can we meet ?</p>
-            </div>
-          </div>
-          <p class="response-time time"> 15h04</p>
-          <div class="message">
-            <div class="photo" style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
-              <div class="online"></div>
-            </div>
-            <p class="text"> 9 pm at the bar if possible 😳</p>
-          </div>
-          <p class="time"> 15h09</p>
         </div>
-        <div class="footer-chat">
-          <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
-          <input type="text" class="write-message" [(ngModel)]="newMessage" placeholder="Type your message here">
-          <i class="icon send fa fa-paper-plane-o clickable" (click)="sendMessage()" aria-hidden="true"></i>
-        </div>
-      <!-- </section> -->
+      </div>
     </div>
+
+      <div class="footer-chat">
+        <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
+        <input type="text" class="write-message" [(ngModel)]="newMessage" placeholder="Type your message here">
+        <i class="icon send fa fa-paper-plane-o clickable" (click)="sendMessage()" aria-hidden="true"></i>
+      </div>
 </div>
+
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Group Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-3">
+          <div class="col-12">
+            <input type="text" class="form-control" placeholder="Enter Group Name" [(ngModel)]="groupTitle">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3 text-center">
+            <div class="profile-photo-wrapper">
+              <img src="https://via.placeholder.com/300x200" alt="Profile Photo" class="profile-photo" (click)="togglePhotoOptions()">
+              <div *ngIf="showPhotoOptions" class="photo-options">
+                <button class="btn btn-sm btn-outline-primary" (click)="editPhoto($event)">Edit</button>
+                <button class="btn btn-sm btn-outline-danger" (click)="deletePhoto($event)">Delete</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <h6 class="mb-2">Members</h6>
+            <ul class="list-group list-group-flush">
+              <!-- <input type="text" [(ngModel)]="searchTerm" (input)="filterMembers()" placeholder="Search members..." class="form-control mb-3"> -->
+              <div class="input-group">
+                <!-- <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (keyup)="filterMembers()"> -->
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm" (keyup)="filterMembers()">
+                  <span class="input-group-text clear-icon" *ngIf="searchTerm.length > 0" (click)="clearSearch()">
+                    <i class="bi bi-x-circle"></i>
+                  </span>
+                </div>
+              </div>
+              <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let member of filteredMembers; let i = index">
+                <label>{{ member.userName }}</label>
+                <input class="form-check-input ms-auto" type="checkbox" [checked]="member.checked" (change)="toggleSelection(member.userName,i)">
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" (click)="createGroup()" data-bs-dismiss="modal">Create Group</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
