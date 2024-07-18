@@ -1,5 +1,5 @@
 <div class="chat-container">
-  <section class="discussions" [ngClass]="{'expanded': selectedUser}">
+  <section class="discussions" [ngClass]="{'expanded': (activeTab == 'individual' && selectedUser) || (activeTab == 'group'&& selectedGroup)}">
       <div class="discussion search">
         <!-- <div class="searchbar"> -->
           <i class="fa fa-search" aria-hidden="true"></i>
