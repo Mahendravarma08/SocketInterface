@@ -60,10 +60,23 @@ export class SocketService {
     }
   }
 
+  sendGroupMessage(message: any) {
+    if (this.socket) {
+      // this.socket.emit('send-message', message);
+      this.socket.emit('sendGroupMessage',message, message.groupId);
+    }
+  }
+
   // Add a method to listen for incoming messages
   onMessage(callback: (message: any) => void) {
     if (this.socket) {
       this.socket.on('receive-message', callback);
+    }
+  }
+
+  recieveGroupMessage(callback: (message: any) => void) {
+    if (this.socket) {
+      this.socket.on('messageReceived', callback);
     }
   }
 

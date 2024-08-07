@@ -1,5 +1,5 @@
 <div class="chat-container">
-  <section class="discussions" [ngClass]="{'expanded': selectedUser}">
+  <section class="discussions" [ngClass]="{'expanded': (activeTab == 'individual' && selectedUser) || (activeTab == 'group'&& selectedGroup)}">
       <div class="discussion search">
         <!-- <div class="searchbar"> -->
           <i class="fa fa-search" aria-hidden="true"></i>
@@ -30,7 +30,7 @@
         <!-- <button (click)="openModal()">Create group</button> -->
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" (click)="resetGroupDetails()">Create Group</button>
 
-        <div class="discussion message-active" *ngFor="let group of groups" (click)="selectGroup(group.groupTitle)">
+        <div class="discussion message-active" *ngFor="let group of groups" (click)="selectGroup(group)">
           <div class="photo" style="background-image: url(https://i.pinimg.com/originals/a9/26/52/a926525d966c9479c18d3b4f8e64b434.jpg);">
             <div class="online"></div>
           </div>
@@ -68,21 +68,21 @@
     </div>
     <div *ngIf="activeTab === 'group'">
       <div class="chat-header">
-        <span class="user-name">Partha</span>
+        <span class="user-name">{{selectedGroup}}</span>
       </div>
       <div class="messages-wrapper" #scroll>
-        <div class="messages-chat">
-          <div class="message">
+        <div class="messages-chat" *ngFor="let message of groupMessages">
+          <div class="message" *ngIf="message.sender != currentUser">
             <div class="photo" style="background-image: url(https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80);">
               <div class="online"></div>
             </div>
             <p class="text">
-              Hellooo
+              {{message.message}}
             </p>
           </div>
-          <div class="message text-only">
+          <div class="message text-only" *ngIf="message.sender == currentUser">
             <div class="response">
-              <p class="text"> Hiiii</p>
+              <p class="text"> {{message.message}}</p>
             </div>
           </div>
         </div>
@@ -91,8 +91,8 @@
 
       <div class="footer-chat">
         <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
-        <input type="text" class="write-message" [(ngModel)]="newMessage" placeholder="Type your message here">
-        <i class="icon send fa fa-paper-plane-o clickable" (click)="sendMessage()" aria-hidden="true"></i>
+        <input type="text" class="write-message" [(ngModel)]="groupMessage" placeholder="Type your message here">
+        <i class="icon send fa fa-paper-plane-o clickable" (click)="sendMessageFromGroup()" aria-hidden="true"></i>
       </div>
 </div>
 

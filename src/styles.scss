@@ -12,6 +12,14 @@
   // background-color: white;
 }
 
+body {
+  height: 100vh;
+  margin: 0;
+  padding:0;
+  position: relative;
+  vertical-align: baseline;
+}
+
 .layout app-logout-button {
   position: absolute;
   top: 10px;
@@ -272,9 +280,10 @@ a:hover {
 
 .messages-wrapper {
   // flex: 1;
+  height:50%;
   overflow-y: scroll;
-  padding: 25px 35px;
-  margin-bottom: 100px; /* Space for footer */
+  padding: 25px 35px 100px;
+  // margin-bottom: 100px; /* Space for footer */
 }
 
 
@@ -412,6 +421,7 @@ a:hover {
   display:flex;
   align-items: center;
   position:absolute;
+  z-index: 1;
   bottom: 0;
   // background-color: transparent;
   border-top: 2px solid #2c2828;

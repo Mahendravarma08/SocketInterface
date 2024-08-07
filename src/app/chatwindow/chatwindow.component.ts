@@ -23,8 +23,11 @@ export class ChatwindowComponent implements OnInit {
   groups:any[] = []
   selectedUser: usersList | null = null;
   selectedGroup:string = null
+  selectedGroupId:any = null
   messages: any[] = [];
+  groupMessages:any[] = [];
   newMessage = '';
+  groupMessage = '';
   groupTitle:string = ''
   currentUser: string = '';
   socketId: any = null;
@@ -52,6 +55,12 @@ export class ChatwindowComponent implements OnInit {
         console.log('Received message:', message);
         this.messages.push(message);
       });
+      this.socketService.recieveGroupMessage(message => {
+        console.log('Received message:', message);
+        this.groupMessages.push(message.message);
+        console.log(this.groupMessages);
+        
+      });
     });
     this.getUsers(this.currentUser);
     $('#messages-wrapper').animate( { scrollTop: $('#messages-wrapper').prop('scrollHeight') }, 750 );
@@ -76,25 +85,30 @@ export class ChatwindowComponent implements OnInit {
       }
     });
   }
-  selectGroup(groupId) {
-    this.selectedGroup = groupId;
+  selectGroup(group) {
+    this.selectedGroup = group.groupTitle;
+    this.selectedGroupId = group._id
     console.log(this.selectedGroup,"selectedGrouyop");
+    console.log(this.selectedGroupId,"selectedGroupId");
     
-    // console.log(this.selectedUser);
+    console.log(this.selectedUser);
 
-    // const body = {
-    //   currentUser: this.currentUser,
-    //   selectedUser: this.selectedUser.userName
-    // };
+    const body = {
+      currentUser:this.currentUser,
+      groupId:this.selectedGroupId
+    };
 
-    // this.httpService.getMessages(body).subscribe({
-    //   next: (response) => {
-    //     console.log(response, "response_from_getMessages");
-    //     if (response && response.ok) {
-    //       this.messages = response.messages;
-    //     }
-    //   }
-    // });
+    this.httpService.getGroupMessages(body).subscribe({
+      next: (response) => {
+        console.log(response, "response_from_getMessages");
+        if (response && response.ok) {
+          this.groupMessages = response.messages;
+        }
+
+        console.log(this.groupMessages);
+        
+      }
+    });
   }
 
   sendMessage() {
@@ -117,6 +131,19 @@ export class ChatwindowComponent implements OnInit {
     }
   }
 
+  sendMessageFromGroup(){
+    if (this.groupMessage.trim()) {
+      console.log(this.groupMessage);
+      const body = {
+        sender: this.currentUser,
+        message: this.groupMessage,
+        groupId:this.selectedGroupId
+      };
+      this.socketService.sendGroupMessage(body);
+      this.groupMessage = '';
+    }
+  }
+
   getUsers(userName: string) {
     this.httpService.getUsers({ userName }).subscribe({
       next: (response) => {
@@ -130,18 +157,21 @@ export class ChatwindowComponent implements OnInit {
     });
   }
   
-  changechatmenu(menu: string) {
+  async changechatmenu(menu: string) {
     this.activeTab = menu;
     console.log(this.activeTab,"activeTab");
     if(menu === 'group'){
-      this.httpService.getGroups({ userName:this.currentUser }).subscribe({
+      await this.httpService.getGroups({ userName:this.currentUser }).subscribe({
         next: (response) => {
           console.log(response);
           this.groups = response.groups
+          for (const ele of this.groups) {
+            console.log(ele,"elleee");
+            this.socketService.socket.emit('joinGroup',ele._id)
+          }
         }
       });
     }
-    // Your logic to handle menu change
   }
 
   scrollToBottom(){
@@ -222,7 +252,6 @@ export class ChatwindowComponent implements OnInit {
 
   addToGroup(user,event:any){
     console.log(event,"fkjbkjbjk");
-    
     console.log(user,"ehgvfvgehgffe")
     this.selectedUsers[user] = user
   }
