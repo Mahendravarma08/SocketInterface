@@ -89,10 +89,15 @@
       </div>
     </div>
 
-      <div class="footer-chat">
+      <div class="footer-chat" *ngIf="activeTab === 'group'">
         <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
         <input type="text" class="write-message" [(ngModel)]="groupMessage" placeholder="Type your message here">
         <i class="icon send fa fa-paper-plane-o clickable" (click)="sendMessageFromGroup()" aria-hidden="true"></i>
+      </div>
+      <div class="footer-chat" *ngIf="activeTab === 'individual'">
+        <i class="icon fa fa-smile-o clickable" style="font-size:25pt;" aria-hidden="true"></i>
+        <input type="text" class="write-message" [(ngModel)]="newMessage" placeholder="Type your message here">
+        <i class="icon send fa fa-paper-plane-o clickable" (click)="sendMessage()" aria-hidden="true"></i>
       </div>
 </div>
 

@@ -50,6 +50,8 @@ export class ChatwindowComponent implements OnInit {
         this.socketId = this.socketService.socket;
       }
 
+      this.socketService.socket.emit('joinGroup',this.currentUser)
+
       // Subscribe to incoming messages
       this.socketService.onMessage(message => {
         console.log('Received message:', message);
@@ -91,7 +93,7 @@ export class ChatwindowComponent implements OnInit {
     console.log(this.selectedGroup,"selectedGrouyop");
     console.log(this.selectedGroupId,"selectedGroupId");
     
-    console.log(this.selectedUser);
+    console.log(this.selectedUser); 
 
     const body = {
       currentUser:this.currentUser,
@@ -167,7 +169,6 @@ export class ChatwindowComponent implements OnInit {
           this.groups = response.groups
           for (const ele of this.groups) {
             console.log(ele,"elleee");
-            this.socketService.socket.emit('joinGroup',ele._id)
           }
         }
       });
