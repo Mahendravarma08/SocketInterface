@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, viewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, ViewChild, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpService } from '../services/http.service';
 import { ActivatedRoute } from '@angular/router';
@@ -16,8 +16,17 @@ declare var $:any;
   templateUrl: './chatwindow.component.html',
   styleUrl: './chatwindow.component.scss'
 })
-export class ChatwindowComponent implements OnInit {
+export class ChatwindowComponent implements OnInit,AfterViewChecked  {
+  @ViewChild('chatBody') private chatBody!: ElementRef;
 
+
+  ngAfterViewInit() {
+    this.scrollToBottom();
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
 
   users: usersList[] = [];
   groups:any[] = []
@@ -175,17 +184,22 @@ export class ChatwindowComponent implements OnInit {
     }
   }
 
-  scrollToBottom(){
-    // console.log(this.scroll?.nativeElement?.scrollHeight);
-    // this.scroll.nativeElement.scrollTop = this.scroll?.nativeElement.scrollHeight
+
+
+  scrollToBottom(): void {
+    if (this.chatBody) {
+      try {
+        this.chatBody.nativeElement.scrollTop = this.chatBody.nativeElement.scrollHeight;
+      } catch (err) {
+        console.error('Error scrolling chat body:', err);
+      }
+    }
   }
 
   openModal(){
-    const modal = document.getElementById('my-modal');
+    const modal = document.getElementById('createGroupModel');
     console.log(modal);
-    
-    const closeButton = document.getElementById('close-modal');
-    modal.classList.remove('hidden');
+    // modal.classList.remove('hidden');
     modal.classList.add('visible');
   }
 
@@ -218,6 +232,9 @@ export class ChatwindowComponent implements OnInit {
         selectedMembers.push(ele.userName)
     }
     selectedMembers.push(this.currentUser)
+
+    console.log(this.groupTitle);
+    
     
     const body = {
       groupTitle:this.groupTitle,
@@ -261,5 +278,9 @@ export class ChatwindowComponent implements OnInit {
     console.log(userName,index,"index");
     this.filteredMembers[index]['checked'] = !this.filteredMembers[index]['checked']
     console.log(this.selectedOptions,this.filteredMembers[index]);
+  }
+
+  openSettings(){
+    console.log("opensettingsFunctonHIt")
   }
 }
