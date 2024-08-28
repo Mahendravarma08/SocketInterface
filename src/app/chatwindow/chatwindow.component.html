@@ -75,7 +75,6 @@
     </div>
   </div>
 
-  .
   <div class="chat-div" *ngIf="(activeTab==='individual' && selectedUser) || (activeTab === 'group' && selectedGroup)">
     <div class="chat-header">
       <div class="name-div">
@@ -85,6 +84,26 @@
         <div class="profile-name">
           {{activeTab === 'individual'? selectedUser.userName : selectedGroup}}
         </div>
+      </div>
+      <div class="group-options" *ngIf="activeTab==='group'">
+          <div class="group-members">
+            <div class="show-mini-profile-pic">
+              <img src="../../assets/images/black photo.jpg" alt="">
+            </div>
+            <div class="show-mini-profile-pic">
+              <img src="../../assets/images/black photo.jpg" alt="">
+            </div>
+            <div class="show-mini-profile-pic">
+              <img src="../../assets/images/black photo.jpg" alt="">
+            </div>
+            <div class="plus-members">
+              +2members
+            </div>
+          </div>
+          <div class="group-edit">
+            <i class="bi bi-three-dots-vertical"></i>
+          </div>
+
       </div>
     </div>
     <div class="chat-body" #chatBody>
@@ -149,6 +168,20 @@
           <i class="bi bi-send"></i>
         </button>
       </div>
+    </div>
+  </div>
+
+  <div class="individual-no-chat" *ngIf="activeTab === 'individual' && !selectedUser">
+    <div class="message-block">
+        <div class="message-icon">
+          <img src="../../assets/images/message-icon.png" alt="">
+        </div>
+        <div class="message-text1">
+          Hello and welcome..
+        </div>
+        <div class="message-text2">
+          Start conversation by clicking on a contact.
+        </div>
     </div>
   </div>
 </div>

@@ -76,6 +76,11 @@ export class ChatwindowComponent implements OnInit,AfterViewChecked  {
     this.getUsers(this.currentUser);
     $('#messages-wrapper').animate( { scrollTop: $('#messages-wrapper').prop('scrollHeight') }, 750 );
     this.scrollToBottom();
+    console.log(this.activeTab)
+    console.log(this.selectedUser);
+    console.log(this.selectedGroup);
+    
+    
   }
 
   selectUser(user: usersList) {
@@ -115,9 +120,7 @@ export class ChatwindowComponent implements OnInit,AfterViewChecked  {
         if (response && response.ok) {
           this.groupMessages = response.messages;
         }
-
         console.log(this.groupMessages);
-        
       }
     });
   }
