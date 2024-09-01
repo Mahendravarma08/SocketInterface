@@ -100,7 +100,6 @@ import { Route, Router, RouterModule } from '@angular/router';
       console.log(this.signupForm)
       const formValues = this.signupForm.value
       const body ={
-        email : formValues.email,
         userName  :formValues.username,
         password : formValues.password
       }
