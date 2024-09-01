@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, viewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, OnInit, ViewChild, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpService } from '../services/http.service';
 import { ActivatedRoute } from '@angular/router';
@@ -16,15 +16,27 @@ declare var $:any;
   templateUrl: './chatwindow.component.html',
   styleUrl: './chatwindow.component.scss'
 })
-export class ChatwindowComponent implements OnInit {
+export class ChatwindowComponent implements OnInit,AfterViewChecked  {
+  @ViewChild('chatBody') private chatBody!: ElementRef;
 
+
+  ngAfterViewInit() {
+    this.scrollToBottom();
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
 
   users: usersList[] = [];
   groups:any[] = []
   selectedUser: usersList | null = null;
   selectedGroup:string = null
+  selectedGroupId:any = null
   messages: any[] = [];
+  groupMessages:any[] = [];
   newMessage = '';
+  groupMessage = '';
   groupTitle:string = ''
   currentUser: string = '';
   socketId: any = null;
@@ -47,15 +59,28 @@ export class ChatwindowComponent implements OnInit {
         this.socketId = this.socketService.socket;
       }
 
+      this.socketService.socket.emit('joinGroup',this.currentUser)
+
       // Subscribe to incoming messages
       this.socketService.onMessage(message => {
         console.log('Received message:', message);
         this.messages.push(message);
       });
+      this.socketService.recieveGroupMessage(message => {
+        console.log('Received message:', message);
+        this.groupMessages.push(message.message);
+        console.log(this.groupMessages);
+        
+      });
     });
     this.getUsers(this.currentUser);
     $('#messages-wrapper').animate( { scrollTop: $('#messages-wrapper').prop('scrollHeight') }, 750 );
     this.scrollToBottom();
+    console.log(this.activeTab)
+    console.log(this.selectedUser);
+    console.log(this.selectedGroup);
+    
+    
   }
 
   selectUser(user: usersList) {
@@ -76,25 +101,28 @@ export class ChatwindowComponent implements OnInit {
       }
     });
   }
-  selectGroup(groupId) {
-    this.selectedGroup = groupId;
+  selectGroup(group) {
+    this.selectedGroup = group.groupTitle;
+    this.selectedGroupId = group._id
     console.log(this.selectedGroup,"selectedGrouyop");
+    console.log(this.selectedGroupId,"selectedGroupId");
     
-    // console.log(this.selectedUser);
+    console.log(this.selectedUser); 
 
-    // const body = {
-    //   currentUser: this.currentUser,
-    //   selectedUser: this.selectedUser.userName
-    // };
+    const body = {
+      currentUser:this.currentUser,
+      groupId:this.selectedGroupId
+    };
 
-    // this.httpService.getMessages(body).subscribe({
-    //   next: (response) => {
-    //     console.log(response, "response_from_getMessages");
-    //     if (response && response.ok) {
-    //       this.messages = response.messages;
-    //     }
-    //   }
-    // });
+    this.httpService.getGroupMessages(body).subscribe({
+      next: (response) => {
+        console.log(response, "response_from_getMessages");
+        if (response && response.ok) {
+          this.groupMessages = response.messages;
+        }
+        console.log(this.groupMessages);
+      }
+    });
   }
 
   sendMessage() {
@@ -117,6 +145,19 @@ export class ChatwindowComponent implements OnInit {
     }
   }
 
+  sendMessageFromGroup(){
+    if (this.groupMessage.trim()) {
+      console.log(this.groupMessage);
+      const body = {
+        sender: this.currentUser,
+        message: this.groupMessage,
+        groupId:this.selectedGroupId
+      };
+      this.socketService.sendGroupMessage(body);
+      this.groupMessage = '';
+    }
+  }
+
   getUsers(userName: string) {
     this.httpService.getUsers({ userName }).subscribe({
       next: (response) => {
@@ -130,31 +171,38 @@ export class ChatwindowComponent implements OnInit {
     });
   }
   
-  changechatmenu(menu: string) {
+  async changechatmenu(menu: string) {
     this.activeTab = menu;
     console.log(this.activeTab,"activeTab");
     if(menu === 'group'){
-      this.httpService.getGroups({ userName:this.currentUser }).subscribe({
+      await this.httpService.getGroups({ userName:this.currentUser }).subscribe({
         next: (response) => {
           console.log(response);
           this.groups = response.groups
+          for (const ele of this.groups) {
+            console.log(ele,"elleee");
+          }
         }
       });
     }
-    // Your logic to handle menu change
   }
 
-  scrollToBottom(){
-    // console.log(this.scroll?.nativeElement?.scrollHeight);
-    // this.scroll.nativeElement.scrollTop = this.scroll?.nativeElement.scrollHeight
+
+
+  scrollToBottom(): void {
+    if (this.chatBody) {
+      try {
+        this.chatBody.nativeElement.scrollTop = this.chatBody.nativeElement.scrollHeight;
+      } catch (err) {
+        console.error('Error scrolling chat body:', err);
+      }
+    }
   }
 
   openModal(){
-    const modal = document.getElementById('my-modal');
+    const modal = document.getElementById('createGroupModel');
     console.log(modal);
-    
-    const closeButton = document.getElementById('close-modal');
-    modal.classList.remove('hidden');
+    // modal.classList.remove('hidden');
     modal.classList.add('visible');
   }
 
@@ -187,6 +235,9 @@ export class ChatwindowComponent implements OnInit {
         selectedMembers.push(ele.userName)
     }
     selectedMembers.push(this.currentUser)
+
+    console.log(this.groupTitle);
+    
     
     const body = {
       groupTitle:this.groupTitle,
@@ -222,7 +273,6 @@ export class ChatwindowComponent implements OnInit {
 
   addToGroup(user,event:any){
     console.log(event,"fkjbkjbjk");
-    
     console.log(user,"ehgvfvgehgffe")
     this.selectedUsers[user] = user
   }
@@ -231,5 +281,9 @@ export class ChatwindowComponent implements OnInit {
     console.log(userName,index,"index");
     this.filteredMembers[index]['checked'] = !this.filteredMembers[index]['checked']
     console.log(this.selectedOptions,this.filteredMembers[index]);
+  }
+
+  openSettings(){
+    console.log("opensettingsFunctonHIt")
   }
 }

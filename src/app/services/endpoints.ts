@@ -7,5 +7,6 @@ export const API = {
     GET_GROUPS : `${environment.apiUrl}/getGroups`,
     CREATE_GROUP:`${environment.apiUrl}/createGroup`,
     GET_MESSAGES : `${environment.apiUrl}/messages`,
+    GET_GROUPMESSAGES: `${environment.apiUrl}/groupMessages`,
     
 }

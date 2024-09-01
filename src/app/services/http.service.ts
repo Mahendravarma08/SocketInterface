@@ -36,5 +36,9 @@ export class HttpService {
   getMessages(body:selectedUser){
     return this.http.get<any>(`${API.GET_MESSAGES}/${body.currentUser}/${body.selectedUser}`,this.httpOptions); 
   }
+
+  getGroupMessages(body){
+    return this.http.get<any>(`${API.GET_GROUPMESSAGES}/${body.currentUser}/${body.groupId}`,this.httpOptions); 
+  }
 }
 

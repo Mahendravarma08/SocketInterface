@@ -1,55 +1,92 @@
 <div class="login-container">
-    <div class="login-card" *ngIf="!showSignUp">
-      <h2 class="lets-chat">Lets Chat</h2>
+  <div class="login-box" *ngIf="!showSignUp">
 
+    <div class="message-icon">
+      <i class="bi bi-chat"></i>
+    </div>
+    <div class="welcome-box">
+      <div class="welcome-text">
+        Welcome Back
+      </div>
+      <div class="welcome-subtext">
+        Glad to see you again!
+      </div>
+    </div>
+    <div class="credential-box">
       <form [formGroup]='loginForm'>
-        <div>
-          <div class="input-group">
-            <input type="text" id="username" formControlName="username" name="username" required>
-            <label for="username">Username</label>
+        <div class="username-box">
+          <div class="username-text">
+            Username
           </div>
-          
-          <div class="input-group">
-            <input type="password" id="password" formControlName="password" name="password" required>
-            <label for="password">Password</label>
-          </div>
-          <div class="error-message" *ngIf="error.error">
-              {{error.message}}
+          <div class="enter-username">
+            <input type="text" formControlName="username" placeholder="Enter your username">
           </div>
         </div>
-        <button type="submit" (click)="login()">Login</button>
+        <div class="password-box">
+          <div class="password-text">
+            Password
+          </div>
+          <div class="enter-password">
+            <input type="password" formControlName="password" placeholder="Enter your password">
+          </div>
+        </div>
       </form>
-      <p>Don't have an account? <a href="#" (click)="toggleForm()">Sign Up</a></p>
+
+      <div class="login-button" (click)="login()">
+        Login
+      </div>
+      <div class="ask-type">
+        <div class="ask-text">
+          Don't have an account?
+        </div>
+        <div class="ask-link">
+          <a (click)="toggleForm()">Signup</a>
+        </div>
+      </div>
     </div>
-  
-    <div class="signup-card" *ngIf="showSignUp">
-      <h2>Sign Up</h2>
-      <form [formGroup]='signupForm'>
-        <div class="input-group">
-          <input type="text" id="fullname" formControlName="username" name="fullname" required>
-          <label for="fullname">Username</label>
+  </div>
+  <div class="login-box" *ngIf="showSignUp">
+      <div class="message-icon">
+        <i class="bi bi-chat"></i>
+      </div>
+      <div class="welcome-box">
+        <div class="welcome-text">
+          Welcome
         </div>
-        
-        <div class="input-group">
-          <input type="email" id="email" formControlName="email" name="email" required>
-          <label for="email">Email</label>
+        <div class="welcome-subtext">
+          Let's start our journey
         </div>
-  
-        <div class="input-group">
-          <input type="password" id="signup-password" formControlName="password" name="signup-password" required>
-          <label for="signup-password">Password</label>
+      </div>
+      <div class="credential-box">
+        <form [formGroup]='loginForm'>
+        <div class="username-box">
+          <div class="username-text">
+            Username
+          </div>
+          <div class="enter-username">
+            <input type="text" formControlName="username" placeholder="Create your username">
+          </div>
         </div>
-        
-        <button type="submit" (click)="signUp()">Sign Up</button>
-      </form>
-      <p>Already have an account? <a href="#" (click)="toggleForm()">Login</a></p>
-    </div>
+        <div class="password-box">
+          <div class="password-text">
+            Password
+          </div>
+          <div class="enter-password">
+            <input type="password" formControlName="password" placeholder="Create your password">
+          </div>
+        </div>
+        </form>
+        <div class="login-button">
+          Signup
+        </div>
+        <div class="ask-type">
+          <div class="ask-text">
+            Already have an account?
+          </div>
+          <div class="ask-link">
+            <a (click)="toggleForm()">Login</a>
+          </div>
+        </div>
+      </div>
+  </div>
 </div>
-
-
-
-
-
-
-
-  
