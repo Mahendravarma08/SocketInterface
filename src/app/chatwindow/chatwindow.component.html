@@ -171,7 +171,7 @@
     </div>
   </div>
 
-  <div class="individual-no-chat" *ngIf="activeTab === 'individual' && !selectedUser">
+  <div class="individual-no-chat" *ngIf="(activeTab === 'individual' && !selectedUser) || (activeTab === 'group' && !selectedGroup)">
     <div class="message-block">
         <div class="message-icon">
           <img src="../../assets/images/message-icon.png" alt="">
