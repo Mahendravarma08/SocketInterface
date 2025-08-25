@@ -5,8 +5,6 @@ import { HttpService } from '../services/http.service';
 import { ActivatedRoute } from '@angular/router';
 import { usersList } from '../interfaces';
 import { SocketService } from '../services/socket.service';
-import { LoginComponent } from '../login/login.component';
-import { InstantiateExpr } from '@angular/compiler';
 declare var $:any;
 
 @Component({
@@ -46,14 +44,18 @@ export class ChatwindowComponent implements OnInit,AfterViewChecked  {
   filteredMembers = [];
   showPhotoOptions: boolean = false;
   selectedOptions: any[] = [];
-  spinner:boolean = false
+  spinner:boolean = false;
 
   constructor(private httpService: HttpService, private route: ActivatedRoute, private socketService: SocketService) {}
 
   ngOnInit(): void {
+    console.log('Component initializing...');
+    
     this.route.queryParams.subscribe(params => {
-      console.log(params, "params");
-      this.currentUser = params['userName'];
+      console.log('Route params:', params);
+      this.currentUser = params['userName'] || 'DemoUser'; // Fallback if no username
+      console.log('Current user set to:', this.currentUser);
+      
       if (!this.socketService.socket) {
         this.socketService.connect(this.currentUser);
         this.socketId = this.socketService.socket;
@@ -73,14 +75,66 @@ export class ChatwindowComponent implements OnInit,AfterViewChecked  {
         
       });
     });
-    this.getUsers(this.currentUser);
+    
+    // Add sample data immediately for testing
+    console.log('Adding sample data...');
+    // this.addSampleData();
+    
+    // Try to get users from API after a short delay
+    setTimeout(() => {
+      if (this.currentUser) {
+        this.getUsers(this.currentUser);
+      }
+    }, 100);
+    
     $('#messages-wrapper').animate( { scrollTop: $('#messages-wrapper').prop('scrollHeight') }, 750 );
     this.scrollToBottom();
-    console.log(this.activeTab)
-    console.log(this.selectedUser);
-    console.log(this.selectedGroup);
+    console.log('Component initialized with:', {
+      activeTab: this.activeTab,
+      selectedUser: this.selectedUser,
+      selectedGroup: this.selectedGroup,
+      usersCount: this.users.length,
+      groupsCount: this.groups.length
+    });
+  }
+
+  // Add sample data for testing
+  addSampleData() {
+    console.log('Adding sample data...');
     
+    // Sample users for testing
+    this.users = [
+      { userName: 'John Doe', email: 'john@example.com', password: '', socketId: '1' },
+      { userName: 'Jane Smith', email: 'jane@example.com', password: '', socketId: '2' },
+      { userName: 'Mike Johnson', email: 'mike@example.com', password: '', socketId: '3' },
+      { userName: 'Sarah Wilson', email: 'sarah@example.com', password: '', socketId: '4' },
+      { userName: 'David Brown', email: 'david@example.com', password: '', socketId: '5' }
+    ];
     
+    // Sample groups for testing
+    this.groups = [
+      { groupTitle: 'Team Chat', id: 1 },
+      { groupTitle: 'Project Discussion', id: 2 },
+      { groupTitle: 'General', id: 3 }
+    ];
+    
+    this.filteredMembers = [...this.users];
+    
+    // Force change detection
+    this.users = [...this.users];
+    this.groups = [...this.groups];
+    
+    // Auto-select first user to show chat
+    if (this.users.length > 0 && !this.selectedUser) {
+      this.selectUser(this.users[0]);
+    }
+    
+    console.log('Sample data loaded:', {
+      users: this.users,
+      groups: this.groups,
+      filteredMembers: this.filteredMembers,
+      selectedUser: this.selectedUser
+    });
   }
 
   selectUser(user: usersList) {
@@ -95,34 +149,62 @@ export class ChatwindowComponent implements OnInit,AfterViewChecked  {
     this.httpService.getMessages(body).subscribe({
       next: (response) => {
         console.log(response, "response_from_getMessages");
-        if (response && response.ok) {
+        if (response && response.ok && response.messages && response.messages.length > 0) {
           this.messages = response.messages;
+        } else {
+          // No messages found - show empty conversation state
+          this.messages = [];
+          console.log('No messages found - showing empty conversation state');
         }
+      },
+      error: (error) => {
+        console.error('Error getting messages:', error);
+        // No messages due to error - show empty conversation state
+        this.messages = [];
+        console.log('Error getting messages - showing empty conversation state');
       }
     });
   }
-  selectGroup(group) {
-    this.selectedGroup = group.groupTitle;
-    this.selectedGroupId = group._id
-    console.log(this.selectedGroup,"selectedGrouyop");
-    console.log(this.selectedGroupId,"selectedGroupId");
-    
-    console.log(this.selectedUser); 
 
+  selectGroup(group) {
+    console.log(group)
+    this.selectedGroup = group.groupTitle;
+    this.selectedGroupId = group._id;
+    console.log(this.selectedGroup);
+
+    // Get group messages from API
     const body = {
-      currentUser:this.currentUser,
-      groupId:this.selectedGroupId
+      currentUser: this.currentUser,
+      groupId: this.selectedGroupId
     };
 
     this.httpService.getGroupMessages(body).subscribe({
       next: (response) => {
-        console.log(response, "response_from_getMessages");
+        console.log(response, "response_from_getGroupMessages");
         if (response && response.ok) {
           this.groupMessages = response.messages;
+        } else {
+          // No group messages found - show empty conversation state
+          this.groupMessages = [];
+          console.log('No group messages found - showing empty conversation state');
         }
-        console.log(this.groupMessages);
+      },
+      error: (error) => {
+        console.error('Error getting group messages:', error);
+        // No messages due to error - show empty conversation state
+        this.groupMessages = [];
+        console.log('Error getting group messages - showing empty conversation state');
       }
     });
+  }
+
+  // TrackBy methods for performance
+  trackByUserId(index: number, user: any): string {
+    return user.socketId || user.userName || index.toString();
+  }
+
+  trackByGroupId(index: number, group: any): number {
+    return group.id || index;
   }
 
   sendMessage() {
@@ -159,14 +241,23 @@ export class ChatwindowComponent implements OnInit,AfterViewChecked  {
   }
 
   getUsers(userName: string) {
+    console.log('Calling getUsers with:', userName);
     this.httpService.getUsers({ userName }).subscribe({
       next: (response) => {
-        console.log(response);
-        if (response && response.ok) {
+        console.log('getUsers response:', response);
+        if (response && response.ok && response.users && response.users.length > 0) {
           this.users = response.users;
-          this.filteredMembers = [...this.users]
-          console.log(this.users);
+          this.filteredMembers = [...this.users];
+          console.log('Users loaded from API:', this.users);
+        } else {
+          console.log('No users from API, keeping sample data');
+          // Keep the sample data if API doesn't return users
         }
+      },
+      error: (error) => {
+        console.error('Error getting users:', error);
+        console.log('Keeping sample data due to API error');
+        // Keep the sample data if API fails
       }
     });
   }

@@ -61,6 +61,7 @@ export class SocketService {
   }
 
   sendGroupMessage(message: any) {
+    console.log(this.socket, "this.socket")
     if (this.socket) {
       // this.socket.emit('send-message', message);
       this.socket.emit('sendGroupMessage',message, message.groupId);

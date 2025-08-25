@@ -6,10 +6,10 @@
       </div>
     </div>
     <div class="navbar-body">
-      <div class="icon" (click)="changechatmenu('individual')">
+      <div class="icon" [class.active]="activeTab === 'individual'" (click)="changechatmenu('individual')">
         <i class="bi bi-person"></i>
       </div>
-      <div class="icon" (click)="changechatmenu('group')">
+      <div class="icon" [class.active]="activeTab === 'group'" (click)="changechatmenu('group')">
         <i class="bi bi-people"></i>
       </div>
       <div class="icon" (click)="openSettings()">
@@ -43,35 +43,49 @@
         </div>
       </div>
     </div>
+    
+    <!-- Debug info -->
+    <!-- <div style="padding: 10px; background: #f0f0f0; font-size: 12px; color: #666;">
+      Users: {{users.length}} | Groups: {{groups.length}} | Active: {{activeTab}}
+      <button (click)="addSampleData()" style="margin-left: 10px; padding: 2px 8px; font-size: 10px; background: #8C4EF9; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        Reload Data
+      </button>
+    </div> -->
+    
     <div class="contacts-or-groups" *ngIf="activeTab === 'individual'">
-      <div class="contact-container" *ngFor="let item of users" (click)="selectUser(item)">
+      <div class="contact-container" *ngFor="let item of users; trackBy: trackByUserId" (click)="selectUser(item)">
         <div class="profile-photo">
           <img src="../../assets/images/black photo.jpg" alt="">
         </div>
         <div class="profile-name">
           <h5>{{item.userName}}</h5>
         </div>
-        <!-- <div class="unread-message-count">
-          22+
-        </div> -->
         <br>
       </div>
-      <div class="divider"></div>
+      <div class="divider" *ngIf="users.length > 0"></div>
+      
+      <!-- Show message if no users -->
+      <div *ngIf="users.length === 0" style="padding: 20px; text-align: center; color: #666;">
+        No users found. Loading sample data...
+      </div>
     </div>
+    
     <div class="contacts-or-groups" *ngIf="activeTab === 'group'">
-      <div class="contact-container" *ngFor="let item of groups" (click)="selectGroup(item)">
+      <div class="contact-container" *ngFor="let item of groups; trackBy: trackByGroupId" (click)="selectGroup(item)">
         <div class="profile-photo">
           <img src="../../assets/images/black photo.jpg" alt="">
         </div>
         <div class="profile-name">
           <h5>{{item.groupTitle}}</h5>
         </div>
-        <!-- <div class="unread-message-count">
-          22+
-        </div> -->
         <br>
       </div>
-      <div class="divider"></div>
+      <div class="divider" *ngIf="groups.length > 0"></div>
+      
+      <!-- Show message if no groups -->
+      <div *ngIf="groups.length === 0" style="padding: 20px; text-align: center; color: #666;">
+        No groups found. Loading sample data...
+      </div>
     </div>
   </div>
 
@@ -108,6 +122,22 @@
     </div>
     <div class="chat-body" #chatBody>
       <ng-container *ngIf="activeTab === 'individual'">
+        <!-- Empty conversation state for individual chat -->
+        <div class="empty-conversation" *ngIf="messages.length === 0">
+          <div class="empty-message-block">
+            <div class="empty-icon">
+              <i class="bi bi-chat-dots"></i>
+            </div>
+            <div class="empty-title">
+              No messages yet
+            </div>
+            <div class="empty-subtitle">
+              Start the conversation by sending your first message to {{selectedUser?.userName}}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Messages display -->
         <ng-container *ngFor="let message of messages">
           <div class="message-left-outer" *ngIf="message.sender != currentUser">
             <div class="profile-photo">
@@ -127,7 +157,24 @@
           </div>
         </ng-container>
       </ng-container>
+      
       <ng-container *ngIf="activeTab === 'group'">
+        <!-- Empty conversation state for group chat -->
+        <div class="empty-conversation" *ngIf="groupMessages.length === 0">
+          <div class="empty-message-block">
+            <div class="empty-icon">
+              <i class="bi bi-people"></i>
+            </div>
+            <div class="empty-title">
+              No messages in this group
+            </div>
+            <div class="empty-subtitle">
+              Be the first to start the conversation in {{selectedGroup}}
+            </div>
+          </div>
+        </div>
+        
+        <!-- Group messages display -->
         <ng-container *ngFor="let message of groupMessages">
           <div class="message-left-outer" *ngIf="message.sender != currentUser">
             <div class="profile-photo">
@@ -177,10 +224,10 @@
           <img src="../../assets/images/message-icon.png" alt="">
         </div>
         <div class="message-text1">
-          Hello and welcome..
+          Welcome to ChatHub! 👋
         </div>
         <div class="message-text2">
-          Start conversation by clicking on a contact.
+          Select a contact from the left to start a conversation and begin chatting with your friends and colleagues.
         </div>
     </div>
   </div>
@@ -210,10 +257,8 @@
               <div class="search-members">
                 <input type="text" class="form-control" placeholder="Search..." [(ngModel)]="searchTerm"
                   (keyup)="filterMembers()">
-                <!-- <i class="bi bi-x-circle"></i> -->
               </div>
               <div class="member-list" *ngFor="let member of filteredMembers; let i = index">
-                <!-- Repeat this for each member -->
                 <div class="member">
                   <input type="checkbox" [checked]="member.checked" (change)="toggleSelection(member.userName,i)">
                   <img src="path_to_image" alt="Member Name">
